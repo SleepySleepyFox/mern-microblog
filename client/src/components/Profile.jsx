@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Post from './Post'
+import axios from 'axios'
 
 export default function Profile() {
+
   return (
     <div className='h-full w-full items-center p-6'>
         <div>
