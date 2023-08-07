@@ -2,6 +2,7 @@ import React from 'react'
 import Post from './Post'
 
 export default function Main() {
+  console.log('token: ',localStorage.getItem('token'))
   return (
     <div className='h-full w-full items-center p-6'>
         <div>

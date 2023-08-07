@@ -12,13 +12,18 @@ export default function Register() {
     e.preventDefault()
     
     const base64 = await convertToBase64(profilePic)
-    console.log(base64)
 
-    axios.post('http://localhost:4000/register', {
+    const register = axios.post('http://localhost:4000/register', {
       username: userName,
       password: password,
       pfp: base64
     })
+
+    const token = (await register).data.token
+    localStorage.setItem('token', token)
+
+    await location.reload()
+
   }
 
   const convertToBase64 = (file) => {

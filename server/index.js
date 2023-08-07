@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 require('dotenv').config()
 const User = require('./models/User')
+const jwt = require('jsonwebtoken')
 
 const app = express()
 app.use(express.json())
@@ -14,7 +15,21 @@ app.get('/', (req, res) => {
     res.send('works')
 })
 
-// app.get('/profile', (req, res))
+app.post('/auth', async (req, res) => {
+    const {username, password} = req.body
+    const user = await User.findOne({username})
+    if(!user){
+        console.log('Error user not fountd')
+    }else{
+        if(user.password === password){
+            console.log('OK')
+            const token = jwt.sign({userId: user._id}, 'dasjhkfsd')
+            res.json(token)
+        }else{
+            console.log('Invalid password')
+        }
+    }
+})
 
 app.post('/register', async (req, res) => {
     
@@ -24,7 +39,8 @@ app.post('/register', async (req, res) => {
             password: req.body.password,
             profilePic: req.body.pfp
         })
-        console.log(user)
+        const token = jwt.sign({userId: user._id}, 'dasjhkfsd')
+        res.json(token)
     }catch(err){
         console.log(err)
     }
