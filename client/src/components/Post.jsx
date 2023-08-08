@@ -4,7 +4,10 @@ export default function Post(props) {
   return (
     <div className='p-2 m-2 border-t-2'>
         <div className='flex justify-start items-center w-full'>
-            <img src={props.profilePic} alt="" className='h-10'/>
+            
+              <img src={props.profilePic} alt="" className='max-h-10'/>
+        
+            
             <div className='px-4'>{props.post}</div>
         </div>
         <div className='mt-auto flex items-end justify-start gap-3 opacity-70'>

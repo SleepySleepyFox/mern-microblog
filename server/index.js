@@ -54,7 +54,13 @@ app.post('/userInfo', (req, res) => {
         }
         else{
             const user = await User.findById(decodedToken.userId)
-            res.send({profilePic: user.profilePic, userName: user.username})
+            const posts = await Post.find({'author': user.username})
+            res.send(
+                {
+                    profilePic: user.profilePic, 
+                    userName: user.username,
+                    posts: posts
+                })
         }
     })
 })

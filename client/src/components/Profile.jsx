@@ -9,16 +9,28 @@ export default function Profile() {
     profilePic: ''
   })
 
-  
-  useEffect(() => {
-    
-    axios.post('http://localhost:4000/userInfo', {token: localStorage.getItem('token')})
-    .then(res => setUser({
-      userName: res.data.userName,
-      profilePic: res.data.profilePic
-    }))
+  const [feed, setFeed] = useState([])
 
+  
+  useEffect(() => { 
+    axios.post('http://localhost:4000/userInfo', {token: localStorage.getItem('token')})
+    .then(res => {
+      setUser({
+        userName: res.data.userName,
+        profilePic: res.data.profilePic
+      })
+      setFeed(res.data.posts)
+    })
+    
   }, [])
+
+  const displayFeed = 
+      feed.map(e => 
+        <Post
+        author={e.author}
+        profilePic={e.profilePic}
+        post={e.post}
+        />)
 
   return (
     <div className='h-full w-full items-center p-6'>
@@ -27,9 +39,7 @@ export default function Profile() {
               <img src={user.profilePic} alt="" className='h-10'/> 
               <h1 className='text-2xl p-0 m-0'>{user.userName}</h1>
         </div>
-          <Post/>
-          <Post/>
-          <Post/>
+         {displayFeed}
         </div>
 
     </div>
