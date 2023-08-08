@@ -4,6 +4,7 @@ const cors = require('cors')
 require('dotenv').config()
 const User = require('./models/User')
 const jwt = require('jsonwebtoken')
+const Post = require('./models/Post')
 
 const app = express()
 app.use(express.json())
@@ -15,6 +16,7 @@ app.get('/', (req, res) => {
     res.send('works')
 })
 
+
 app.post('/auth', async (req, res) => {
     const {username, password} = req.body
     const user = await User.findOne({username})
@@ -22,7 +24,6 @@ app.post('/auth', async (req, res) => {
         console.log('Error user not fountd')
     }else{
         if(user.password === password){
-            console.log('OK')
             const token = jwt.sign({userId: user._id}, 'dasjhkfsd')
             res.json(token)
         }else{
@@ -44,6 +45,36 @@ app.post('/register', async (req, res) => {
     }catch(err){
         console.log(err)
     }
+})
+
+app.post('/userInfo', (req, res) => {
+    jwt.verify(req.body.token, 'dasjhkfsd', async (err, decodedToken) => {
+        if(err){
+            console.log(err.message)
+        }
+        else{
+            const user = await User.findById(decodedToken.userId)
+            res.send({profilePic: user.profilePic, userName: user.username})
+        }
+    })
+})
+
+app.post('/post', async (req, res) => {
+    try{   
+        await Post.create({
+            author: req.body.post.author,
+            post: req.body.post.post,
+            profilePic: req.body.post.profilePic
+        })
+    }catch(err){
+        console.log(err)
+    }
+})
+
+app.get('/post', (req, res) => {
+ Post.find({}).then((posts) => {
+    res.send(posts)
+ })
 })
 
 app.listen(4000)

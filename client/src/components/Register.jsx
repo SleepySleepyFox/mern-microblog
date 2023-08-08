@@ -19,7 +19,7 @@ export default function Register() {
       pfp: base64
     })
 
-    const token = (await register).data.token
+    const token = (await register).data
     localStorage.setItem('token', token)
 
     await location.reload()

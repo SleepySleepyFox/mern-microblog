@@ -13,7 +13,7 @@ export default function Register() {
       password: password,
     })
 
-    const token = (await auth).data.token
+    const token = (await auth).data
     localStorage.setItem('token', token)
 
     await location.reload()
@@ -28,6 +28,5 @@ export default function Register() {
          <button type='submit' className='bg-blue-500 p-2 text-white active:bg-blue-600'>Log In</button>
       </form>
       </div>
-
   )
 }

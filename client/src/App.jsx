@@ -16,7 +16,6 @@ export default function App() {
   }, [localStorage.getItem('token')])
 
   return (
-
    
      <BrowserRouter>
         <div className=' h-screen flex justify-center items-center'>
