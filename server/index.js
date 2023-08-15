@@ -5,6 +5,7 @@ require('dotenv').config()
 const User = require('./models/User')
 const jwt = require('jsonwebtoken')
 const Post = require('./models/Post')
+const { ObjectId } = require('mongodb')
 
 const app = express()
 app.use(express.json())
@@ -70,8 +71,10 @@ app.post('/post', async (req, res) => {
         await Post.create({
             author: req.body.post.author,
             post: req.body.post.post,
-            profilePic: req.body.post.profilePic
+            profilePic: req.body.post.profilePic,
+            liked: req.body.post.liked
         })
+
     }catch(err){
         console.log(err)
     }
@@ -81,6 +84,20 @@ app.get('/post', (req, res) => {
  Post.find({}).then((posts) => {
     res.send(posts)
  })
+})
+
+app.post('/likeUpdate', (req, res) => {
+
+    Post.find({_id: `${req.body.id}`}).then(post => {
+        post.filter((field) => 
+            field.likedBy.includes(req.body.userName) ? 
+            Post.findByIdAndUpdate(req.body.id, {$pull: {likedBy: req.body.userName}})
+                .then(doc => res.send(doc))
+            : Post.findByIdAndUpdate(req.body.id, {$push: {likedBy: req.body.userName}})
+                .then(doc => res.send(doc))
+            )
+    })
+    
 })
 
 app.listen(4000)

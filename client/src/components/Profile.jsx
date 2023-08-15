@@ -33,13 +33,13 @@ export default function Profile() {
         />)
 
   return (
-    <div className='h-full w-full items-center p-6'>
+    <div className='h-full w-screen items-center p-6 overflow-auto'>
         <div>
           <div className='w-full px-12 pb-6 flex flex-col gap-1 items-center border-blue-500 border-s-2 '>
               <img src={user.profilePic} alt="" className='h-10'/> 
               <h1 className='text-2xl p-0 m-0'>{user.userName}</h1>
         </div>
-         {displayFeed}
+            {displayFeed}
         </div>
 
     </div>
