@@ -27,9 +27,13 @@ export default function Profile() {
   const displayFeed = 
       feed.map(e => 
         <Post
+        key={e._id}
         author={e.author}
         profilePic={e.profilePic}
         post={e.post}
+        likedBy={e.likedBy}
+        user ={user.userName}
+        id={e._id}
         />)
 
   return (

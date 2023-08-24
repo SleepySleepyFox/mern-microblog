@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import Post from './Post'
 import axios from 'axios'
+import io from 'socket.io-client';
+
+
+// To make live updates -->  https://youtu.be/n9Du-oESxCg
 
 export default function Main() {
   const [user, setUser] = useState({
@@ -11,37 +15,33 @@ export default function Main() {
     author: '',
     post: '',
     profilePic: '',
-    liked: false
+    liked: false,
   })
   const [feed, setFeed] = useState([])
 
-  const [postTimeOut, setPostTimeOut] = useState(false)
-  if(postTimeOut){
-    setTimeout(2000, setPostTimeOut(false))
-  }
-
+  
   useEffect(() => {
-    
     axios.post('http://localhost:4000/userInfo', {token: localStorage.getItem('token')})
     .then(res => setUser({
       userName: res.data.userName,
       profilePic: res.data.profilePic
     }))
-
+    
     axios.get('http://localhost:4000/post')
-      .then(res => setFeed(res.data))
-
+    .then(res => setFeed(res.data))
+    
+    const socket = io.connect('http://localhost:4000')
+    socket.on("Data", (data) => {
+      console.log(data)
+      setFeed(e => [...e, data.fullDocument])
+    })
   }, [])
 
-  const getPosts = () => {
-    axios.get('http://localhost:4000/post')
-      .then(res => setFeed(res.data))
-  }
-
-  if(postTimeOut){
-    getPosts()
-  }
-  
+  // const getPosts = () => {
+  //   axios.get('http://localhost:4000/post')
+  //     .then(res => setFeed(res.data))    
+  // }  
+  // getPosts()
   
   const handlePost = () => {
     axios.post('http://localhost:4000/post', {post})
@@ -53,7 +53,6 @@ export default function Main() {
         liked: false 
       }
       )
-      setPostTimeOut(true)
   }
 
   const displayFeed = 

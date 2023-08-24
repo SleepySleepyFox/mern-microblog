@@ -5,8 +5,6 @@ import React from 'react'
 // Change array and display on click
 
 export default function Post(props) {
-  console.log('likedBy: ', props.likedBy)
-
   const handleLike = (userName, id) => {
      axios.post('http://localhost:4000/likeUpdate', {userName, id})
     }

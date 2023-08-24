@@ -9,7 +9,7 @@ const { ObjectId } = require('mongodb')
 
 const app = express()
 app.use(express.json())
-app.use(cors())
+app.use(cors()) 
 
 mongoose.connect(`mongodb+srv://admin:${process.env.KEY}@cluster0.och0jtq.mongodb.net/mern-blog`)
 
@@ -80,11 +80,12 @@ app.post('/post', async (req, res) => {
     }
 })
 
-app.get('/post', (req, res) => {
- Post.find({}).then((posts) => {
-    res.send(posts)
- })
-})
+    app.get('/post', (req, res) => {
+        Post.find({}).then((posts) => {
+        res.send(posts)
+        })
+    })
+
 
 app.post('/likeUpdate', (req, res) => {
 
@@ -100,4 +101,17 @@ app.post('/likeUpdate', (req, res) => {
     
 })
 
-app.listen(4000)
+const server = app.listen(4000)
+
+const io = require("socket.io")(server, {
+    cors: {
+        origin: "*"
+    }
+})
+
+io.on('connect', socket => {
+    const postsConection = Post.watch()
+    postsConection.once('change', data => {
+        socket.emit('Data', data)
+    })
+})
